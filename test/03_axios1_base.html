@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>axios基本使用</title>
+</head>
+<body>
+  
+    <div>
+      <button onclick="testGet()">GET请求</button>
+      <button onclick="testPost()">POST请求</button>
+      <button onclick="testPut()">PUT请求</button>
+      <button onclick="testDelete()">DELETE请求</button>
+    </div>
+
+    <script src="https://cdn.bootcss.com/axios/0.19.2/axios.js"></script>
+
+    <script>
+        // 设置axios默认请求路径
+        axios.defaults.baseURL = 'http://localhost:3000';
+        // 发送get请求
+        function testGet() {
+            // axios({
+            //     method:'get',
+            //     url:'http://localhost:3000/posts',
+            //     params:{
+            //         id:1
+            //     }
+            // })
+
+            axios.get('http://localhost:3000/posts',{params:{id:2}});
+
+        }
+
+    //    返送post请求
+        function testPost() {
+            // axios({
+            //     method:'post',
+            //     url:'/posts',
+            //     data:{
+            //         title:'kobe',
+            //         author:'bryant'
+            //     }
+            // })
+
+            axios.post('/posts',{title:'mamba',author: 'forever'});
+
+        }
+
+    //    发送put请求
+         function testPut() {
+             // axios({
+             //     method:'put',
+             //     url:'/posts/4',
+             //     data:{
+             //         title:24,
+             //         author: 8
+             //     }
+             // })
+
+             axios.put('/posts/4',{title:'forever',author:'mamba'})
+         }
+
+    //     发送delete请求
+        function testDelete() {
+            // axios({
+            //     method:'delete',
+            //     url:'/posts/3',
+            //
+            // })
+
+            axios.delete('/posts/5');
+        }
+
+
+
+
+
+    </script>
+
+</body>
+</html>
