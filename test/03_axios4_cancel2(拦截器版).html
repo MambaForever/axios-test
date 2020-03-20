@@ -18,51 +18,54 @@
     axios.defaults.timeout = 20000;
     // 创建一个变量用来保存取消请求的函数
     let cancel
-    // 获取商品列表1的回调函数
-    function getProducts1() { 
+    // 添加请求拦截器
+    axios.interceptors.request.use(config => {
       if (cancel) { //判断cancel是否有值,从而避免没发送请求就取消请求的事件发生
         cancel();
       }
-      axios.get('/products1',{cancelToken:new axios.CancelToken((c)=>{
-        //配置cancelToken对象,保存用来取消请求1的函数
+      // 添加cancelToken配置对象
+      config.cancelToken = new axios.CancelToken((c)=>{
+        //保存用来取消请求的函数
         cancel = c;
-      })})
+      })
+      return config;
+    })
+
+    // 添加响应拦截器
+    axios.interceptors.response.use(response =>{
+      cancel = null;
+      return response;
+    },error => {
+      if (axios.isCancel(error)) {
+        console.log('商品列表的请求强制取消成功');
+        return new Promise(()=>{});
+      }else{
+        cancel = null;
+        throw error;
+      }
+    })
+
+    // 获取商品列表1的回调函数
+    function getProducts1() { 
+      axios.get('/products1')
       .then(
         response => {
-          cancel = null;
           console.log('商品列表1的数据: ' + response.data);
         },
         error => {
-          if (axios.isCancel(error)) {
-            console.log('商品列表1的请求强制取消成功');
-          }else{
-            cancel = null;
-            console.log('请求商品列表1的数据失败: ' + error.message);
-          }
+          console.log('请求商品列表1的数据失败: ' + error.message);
         }
       )
     }
     // 获取商品列表2的回调函数
     function getProducts2() {
-      if (cancel) { //判断cancel是否有值,从而避免没发送请求就取消请求的事件发生
-        cancel();
-      }
-      axios.get('/products2',{cancelToken:new axios.CancelToken((c)=>{
-        //配置cancelToken对象,保存用来取消请求2的函数
-        cancel = c;
-      })})
+      axios.get('/products2')
       .then(
         response => {
-          cancel = null;
           console.log('商品列表2的数据: ' + response.data);
         },
         error => {
-          if (axios.isCancel(error)) {
-            console.log('商品列表2的请求强制取消成功');
-          }else{
-            cancel = null;
-            console.log('请求商品列表2的数据失败: ' + error.message);
-          }
+          console.log('请求商品列表1的数据失败: ' + error.message);
         }
       )
     }
